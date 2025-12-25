@@ -34,7 +34,7 @@ const COLOR_MAP = {
   orange: "text-orange-400 drop-shadow-xl drop-shadow-orange-400",
   emerald: "text-emerald-400 drop-shadow-xl drop-shadow-emerald-400",
   rose: "text-rose-400 drop-shadow-xl drop-shadow-rose-400",
-  teal: "text-teal-400 drop-shadow-xl drop-shadow-teal-400",
+  teal: "text-teal-300 drop-shadow-xl drop-shadow-teal-300",
   fuchsia: "text-fuchsia-300 drop-shadow-xl drop-shadow-fuchsia-300",
 };
 

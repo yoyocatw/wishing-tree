@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { SnowOverlay } from "react-snow-overlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
       { url: 'favicon_io/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
-  manifest: 'favicon_io/site.webmanifest', 
+  manifest: 'favicon_io/site.webmanifest',
 };
 
 export default function RootLayout({
@@ -35,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-    <head>
+      <head>
         {/* Privacy-friendly analytics by Plausible */}
         <Script
           src="https://plausible.io/js/pa-aYqr5nS94ffqaThPu4vie.js"
@@ -56,6 +57,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <SnowOverlay />
         {children}
       </body>
     </html>

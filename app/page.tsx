@@ -190,7 +190,7 @@ export default function FiniteTree() {
           <div className="flex flex-col items-center mb-1 relative z-10">
                 {/* 1. The Big Star */}
                 <div 
-                    className="text-6xl text-yellow-200 cursor-default select-none mb-2 animate-spin"
+                    className="text-6xl text-yellow-200 cursor-default select-none mb-2 animate-pulse"
                 >
                     ★ 
                 </div>

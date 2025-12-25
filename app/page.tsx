@@ -39,7 +39,7 @@ const COLOR_MAP = {
 };
 
 const COLOR_KEYS = Object.keys(COLOR_MAP) as (keyof typeof COLOR_MAP)[];
-const TREE_SIZE = 40; 
+const TREE_SIZE = 40;
 
 export default function FiniteTree() {
   const [fulfilledSlots, setFulfilledSlots] = useState<Record<string, Wish>>({});
@@ -47,7 +47,8 @@ export default function FiniteTree() {
   const [newMessage, setNewMessage] = useState<string>("");
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [viewingWish, setViewingWish] = useState<Wish | null>(null);
-  
+  const [totalWishes, setTotalWishes] = useState(0);
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,14 +56,15 @@ export default function FiniteTree() {
     const channel = supabase
       .channel('realtime-wishes-grid')
       .on(
-        'postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'wishes' }, 
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'wishes' },
         (payload) => {
           const newWish = payload.new as Wish;
           setFulfilledSlots(prev => ({
             ...prev,
             [`${newWish.grid_row}-${newWish.grid_col}`]: newWish
           }));
+          setTotalWishes(prev => prev + 1);
         }
       )
       .subscribe();
@@ -73,17 +75,18 @@ export default function FiniteTree() {
     const { data } = await supabase.from('wishes').select('*');
     if (data) {
       const slotMap: Record<string, Wish> = {};
-      data.forEach((wish: any) => { 
-        slotMap[`${wish.grid_row}-${wish.grid_col}`] = wish as Wish; 
+      data.forEach((wish: any) => {
+        slotMap[`${wish.grid_row}-${wish.grid_col}`] = wish as Wish;
       });
       setFulfilledSlots(slotMap);
+      setTotalWishes(data.length);
     }
   }
 
   const centerTree = () => {
     if (scrollContainerRef.current) {
-        const { scrollWidth, clientWidth } = scrollContainerRef.current;
-        scrollContainerRef.current.scrollLeft = (scrollWidth - clientWidth) / 2;
+      const { scrollWidth, clientWidth } = scrollContainerRef.current;
+      scrollContainerRef.current.scrollLeft = (scrollWidth - clientWidth) / 2;
     }
   };
 
@@ -107,6 +110,7 @@ export default function FiniteTree() {
     };
 
     setFulfilledSlots(prev => ({ ...prev, [`${selectedSlot.row}-${selectedSlot.col}`]: newWish }));
+    setTotalWishes(prev => prev + 1);
     setSelectedSlot(null);
     setNewMessage("");
     setNewAuthor("");
@@ -119,32 +123,32 @@ export default function FiniteTree() {
 
     for (let r = 1; r < TREE_SIZE; r++) {
       let slotsInRow = [];
-      
-      const slotsCount = (r * 2) - 1; 
+
+      const slotsCount = (r * 2) - 1;
       const startCol = -Math.floor(slotsCount / 2);
 
       for (let i = 0; i < slotsCount; i++) {
         const c = startCol + i;
         const slotKey = `${r}-${c}`;
         const fulfilledWish = fulfilledSlots[slotKey];
-        
+
         const baseClass = "mx-0.5 text-2xl sm:text-3xl leading-none cursor-pointer transition select-none";
 
         if (fulfilledWish) {
           let colorClass = COLOR_MAP[fulfilledWish.color as keyof typeof COLOR_MAP] || COLOR_MAP.green;
-          
+
           if (!COLOR_MAP[fulfilledWish.color as keyof typeof COLOR_MAP]) {
-             if (fulfilledWish.color.includes('red')) colorClass = COLOR_MAP.red;
-             else if (fulfilledWish.color.includes('yellow')) colorClass = COLOR_MAP.yellow;
-             else if (fulfilledWish.color.includes('blue')) colorClass = COLOR_MAP.blue;
-             else colorClass = COLOR_MAP.green;
+            if (fulfilledWish.color.includes('red')) colorClass = COLOR_MAP.red;
+            else if (fulfilledWish.color.includes('yellow')) colorClass = COLOR_MAP.yellow;
+            else if (fulfilledWish.color.includes('blue')) colorClass = COLOR_MAP.blue;
+            else colorClass = COLOR_MAP.green;
           }
 
           slotsInRow.push(
             <div
               key={slotKey}
               className="relative group inline-block z-10 hover:scale-125 transition-transform"
-              onClick={() => setViewingWish(fulfilledWish)} 
+              onClick={() => setViewingWish(fulfilledWish)}
             >
               <span className={`${baseClass} ${colorClass} font-bold animate-pulse`}>*</span>
             </div>
@@ -167,27 +171,40 @@ export default function FiniteTree() {
   };
 
   return (
-    <div 
-        ref={scrollContainerRef} 
-        className="h-screen w-full bg-gray-950 font-mono text-white overflow-x-auto overflow-y-scroll"
+    <div
+      ref={scrollContainerRef}
+      className="h-screen w-full bg-gray-950 font-mono text-white overflow-x-auto overflow-y-scroll"
     >
       <div className="min-w-max pb-20">
-          
-          <header className="sticky left-0 right-0 top-0 z-20 p-4 text-center bg-gray-950/80 backdrop-blur-md border-b border-white/5 w-screen max-w-full">
-            <h1 className="text-xl font-bold tracking-tight text-green-400 uppercase drop-shadow-lg">
-              THE WISHING TREE 祝福樹
-            </h1>
-            <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest">
-              Tap a star to make a wish 按一顆星星許個願
-            </p>
-          </header>
 
-          <main className="pt-8 flex flex-col items-center">
-            <div className="mt-4">
-              {renderTreeRows()}
-            </div>
-            
-          </main>
+        <header className="sticky left-0 right-0 top-0 z-20 p-4 text-center bg-gray-950/80 backdrop-blur-md border-b border-white/5 w-screen max-w-full">
+          <h1 className="text-xl font-bold tracking-tight text-green-400 uppercase drop-shadow-lg">
+            THE WISHING TREE 祝福樹
+          </h1>
+          <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest">
+            Tap a star to make a wish 按一顆星星許個願
+          </p>
+        </header>
+        
+        <main className="pt-8 flex flex-col items-center">
+          <div className="flex flex-col items-center mb-1 relative z-10">
+                {/* 1. The Big Star */}
+                <div 
+                    className="text-6xl text-yellow-200 cursor-default select-none mb-2 animate-spin"
+                >
+                    ★ 
+                </div>
+                
+                {/* 2. The Counter */}
+                <div className="text-xs text-yellow-300 font-bold tracking-widest uppercase border border-yellow-500/50 px-3 py-1 rounded-full bg-yellow-500/10 backdrop-blur-sm">
+                    {totalWishes} Wishes Made
+                </div>
+              </div>
+          <div className="mt-4">
+            {renderTreeRows()}
+          </div>
+
+        </main>
       </div>
 
       {selectedSlot && (
@@ -199,23 +216,23 @@ export default function FiniteTree() {
             <div className="space-y-4">
               <div>
                 <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">From · 来自</label>
-                <input 
-                  className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors text-center text-green-100 placeholder-gray-700" 
-                  placeholder="Anonymous" 
-                  value={newAuthor} 
-                  onChange={e => setNewAuthor(e.target.value)} 
-                  maxLength={30} 
+                <input
+                  className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors text-center text-green-100 placeholder-gray-700"
+                  placeholder="Anonymous"
+                  value={newAuthor}
+                  onChange={e => setNewAuthor(e.target.value)}
+                  maxLength={30}
                 />
               </div>
               <div>
                 <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">Message · 願望</label>
-                <textarea 
-                  required 
-                  className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors min-h-[100px] text-green-100 placeholder-gray-700 resize-none" 
-                  placeholder="Write your blessing..." 
-                  value={newMessage} 
-                  onChange={e => setNewMessage(e.target.value)} 
-                  maxLength={150} 
+                <textarea
+                  required
+                  className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors min-h-[100px] text-green-100 placeholder-gray-700 resize-none"
+                  placeholder="Write your blessing..."
+                  value={newMessage}
+                  onChange={e => setNewMessage(e.target.value)}
+                  maxLength={150}
                 />
               </div>
             </div>

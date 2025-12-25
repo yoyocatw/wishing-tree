@@ -175,10 +175,10 @@ export default function FiniteTree() {
           
           <header className="sticky left-0 right-0 top-0 z-20 p-4 text-center bg-gray-950/80 backdrop-blur-md border-b border-white/5 w-screen max-w-full">
             <h1 className="text-xl font-bold tracking-tight text-green-400 uppercase drop-shadow-lg">
-              THE WISHING TREE
+              THE WISHING TREE 祝福樹
             </h1>
             <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest">
-              Tap a star to make a wish
+              Tap a star to make a wish 按一顆星星許個願
             </p>
           </header>
 
@@ -198,7 +198,7 @@ export default function FiniteTree() {
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">From</label>
+                <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">From · 来自</label>
                 <input 
                   className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors text-center text-green-100 placeholder-gray-700" 
                   placeholder="Anonymous" 
@@ -208,7 +208,7 @@ export default function FiniteTree() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">Message</label>
+                <label className="text-xs text-gray-500 uppercase block mb-1 tracking-wider">Message · 願望</label>
                 <textarea 
                   required 
                   className="w-full bg-black border border-gray-800 p-3 text-sm focus:outline-none focus:border-green-500 transition-colors min-h-[100px] text-green-100 placeholder-gray-700 resize-none" 
@@ -220,7 +220,7 @@ export default function FiniteTree() {
               </div>
             </div>
 
-            <button type="submit" className="w-full cursor-pointer mt-6 py-3 bg-transparent border border-green-500 text-green-400 font-bold uppercase tracking-widest hover:bg-green-500 hover:text-black transition-all duration-300 text-sm rounded">Hang Wish</button>
+            <button type="submit" className="w-full cursor-pointer mt-6 py-3 bg-transparent border border-green-500 text-green-400 font-bold uppercase tracking-widest hover:bg-green-500 hover:text-black transition-all duration-300 text-sm rounded">Hang My Wish</button>
           </form>
         </div>
       )}

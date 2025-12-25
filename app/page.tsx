@@ -28,7 +28,7 @@ const COLOR_MAP = {
   red: "text-red-500 drop-shadow-xl drop-shadow-red-500",
   yellow: "text-yellow-300 drop-shadow-xl drop-shadow-yellow-300",
   blue: "text-sky-400 drop-shadow-xl drop-shadow-sky-400",
-  green: "text-emerald-400 drop-shadow-xl drop-shadow-emerald-400",
+  green: "text-green-500 drop-shadow-xl drop-shadow-green-500",
   purple: "text-purple-400 drop-shadow-xl drop-shadow-purple-400",
   pink: "text-pink-400 drop-shadow-xl drop-shadow-pink-400",
   orange: "text-orange-400 drop-shadow-xl drop-shadow-orange-400",
@@ -36,6 +36,8 @@ const COLOR_MAP = {
   rose: "text-rose-400 drop-shadow-xl drop-shadow-rose-400",
   teal: "text-teal-300 drop-shadow-xl drop-shadow-teal-300",
   fuchsia: "text-fuchsia-300 drop-shadow-xl drop-shadow-fuchsia-300",
+  lime: "text-lime-300 drop-shadow-xl drop-shadow-lime-300",
+  darkpink: "text-pink-600 drop-shadow-xl drop-shadow-pink-600",
 };
 
 const COLOR_KEYS = Object.keys(COLOR_MAP) as (keyof typeof COLOR_MAP)[];
